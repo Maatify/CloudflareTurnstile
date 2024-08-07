@@ -21,7 +21,7 @@ namespace Maatify\Turnstile;
 
 use Maatify\Json\Json;
 
-class TurnstileRequestValidation extends TurnstileRequestCall
+class TurnstileValidation extends TurnstileRequestCall
 {
 
     public ?bool $success = null;

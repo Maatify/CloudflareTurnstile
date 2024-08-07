@@ -14,6 +14,7 @@ composer require maatify/cloudflare-turnstile
 ```
 
 # Usage
+
 ```PHP
 <?php
 /**
@@ -24,13 +25,13 @@ composer require maatify/cloudflare-turnstile
  * https://www.Maatify.dev
  */
  
-use Maatify\Turnstile\TurnstileRequestValidation;
+use Maatify\Turnstile\TurnstileValidation;
 
 require 'vendor/autoload.php';
 
 $secret_key = '1x0000000000000000000000000000000AA';
 
-$turnstile = TurnstileRequestValidation::getInstance($secret_key);
+$turnstile = TurnstileValidation::getInstance($secret_key);
 
 // ===== get result in array format
 $result = $turnstile->getResponse();
