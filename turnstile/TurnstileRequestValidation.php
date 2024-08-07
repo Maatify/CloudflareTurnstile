@@ -16,58 +16,71 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  *
  */
+
 namespace Maatify\Turnstile;
 
 use Maatify\Json\Json;
 
 class TurnstileRequestValidation extends TurnstileRequestCall
 {
-    private static self $instance;
 
-    public bool $success = false;
-
+    public ?bool $success = null;
     public array $response = [];
-    public static function obj(string $secret_key = ''): self
+
+    private static ?self $instance = null;
+
+    public static function getInstance(string $secret_key = ''): self
     {
-        if (empty(self::$instance)) {
+        if (null === self::$instance) {
             self::$instance = new self($secret_key);
         }
 
         return self::$instance;
     }
 
-    private function validate(): bool
+    private function curlValidation(): bool
     {
         $params = array(
             'secret'   => $this->secret_key,
-            'response' => $_POST['cf-turnstile-response'],
+            'response' => $_POST['cf-turnstile-response'] ?? '',
         );
 
         $response_data = $this->curlPost($params);
-        $this->response = (array) $response_data;
-        if(isset($response_data->success) && $response_data->success){
-            $this->success = true;
-            return true;
-        }else{
-            return false;
+        $this->response = (array)$response_data;
+
+        $this->success = (isset($response_data->success) && $response_data->success);
+
+        return $this->success;
+    }
+
+    private function validate(): bool
+    {
+        if ($this->success === null) {
+            $this->success = $this->curlValidation();
+        }
+
+        return $this->success;
+    }
+
+    public function jsonErrors(): void
+    {
+        if (empty($_POST['cf-turnstile-response'])) {
+            Json::Missing('cf-turnstile-response');
+        }
+        if (! $this->validate()) {
+            Json::Invalid('cf-turnstile-response', Json::JsonFormat($this->response));
         }
     }
 
-    public function validationJsonErrorOnFailed(): void
+    public function isSuccess(): bool
     {
-        if(!$this->Validate()){
-            Json::Invalid('cf-turnstile-response');
-        }
+        return $this->validate();
     }
 
-    public function validationBool(): bool
+    public function getResponse(): array
     {
-        return $this->Validate();
-    }
+        $this->validate();
 
-    public function validationArray(): array
-    {
-        $this->Validate();
         return $this->response;
     }
 }
