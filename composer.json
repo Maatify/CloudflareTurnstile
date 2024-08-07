@@ -1,12 +1,13 @@
 {  "name": "maatify/cloudflare-turnstile",
-  "description": "Unofficial Turnstile for PHP it's library for maatify.dev Turnstile cloudflare Replace Captcha handler, known by our team",
+  "description": "Unofficial Turnstile for PHP it's library for maatify.dev Turnstile cloudflare Captcha handler, known by our team",
   "version": "1.0.0002",
   "type": "library",
   "keywords": [
     "PHP",
     "Turnstile",
     "cloudflare",
-    "Handler"
+    "Handler",
+    "maatify"
   ],
   "homepage": "https://github.com/Maatify/",
   "license": "proprietary",
@@ -20,6 +21,12 @@
     {
       "name": "Ahmed Fawzy",
       "email": "a.fawzy@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "Frontend Developer"
+    },
+    {
+      "name": "Mohaned Saeed Sami",
+      "email": "mohaned.saeed@maatify.dev",
       "homepage": "https://www.maatify.com/",
       "role": "Frontend Developer"
     },
