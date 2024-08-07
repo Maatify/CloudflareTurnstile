@@ -99,7 +99,7 @@ $turnstile->jsonErrors();
 >       "var": "cf-turnstile-response",
 >       "description": "INVALID Cf-turnstile-response",
 >       "more_info": "{\"success\":false,\"error-codes\":[\"timeout-or-duplicate\"],\"messages\":[]}",
->       "error_details": "test:"
+>       "error_details": ""
 >   }
 >```
 > 
@@ -112,6 +112,21 @@ $turnstile->jsonErrors();
 >       "var": "cf-turnstile-response",
 >       "description": "MISSING Cf-turnstile-response",
 >       "more_info": "",
->       "error_details": "test:"
+>       "error_details": ""
 >   }
 >```
+
+
+### Create From in HTML Code
+```html
+<form action="validate.php" method="POST">
+    <input name="test" value="test">
+    <!-- Your other form fields -->
+    
+    <!-- add theme and language -->
+    <div class="cf-turnstile" data-sitekey="__YOUR_SITE_KEY__" data-theme="dark" data-language="ar"></div>
+    <input type="submit" value="Submit">
+</form>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+```
