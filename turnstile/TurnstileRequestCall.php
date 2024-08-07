@@ -44,6 +44,10 @@ abstract class TurnstileRequestCall
         curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 120);
         curl_setopt($this->ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($this->ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        // Required for HTTP error codes to be reported via our call to curl_error($ch)
+//        curl_setopt($this->ch, CURLOPT_FAILONERROR, false);
+
     }
 
     public function curlPost(array $params): stdClass
@@ -71,10 +75,32 @@ abstract class TurnstileRequestCall
     {
         curl_setopt($this->ch, CURLOPT_URL, $this->url);
 
+//        curl_setopt($this->ch, CURLOPT_HEADER, true);
         $result = curl_exec($this->ch);
         $httpCode = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
         $curl_errno = curl_errno($this->ch);
         $curl_error = curl_error($this->ch);
+
+/*
+        $headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
+        $rawHeaders = substr($result, 0, $headerSize);
+        $body = substr($result, $headerSize);
+
+
+        // Parse headers
+        $headers = [];
+        $headerLines = explode("\r\n", $rawHeaders);
+        foreach ($headerLines as $line) {
+            if (strpos($line, ':') !== false) {
+                list($key, $value) = explode(': ', $line, 2);
+                $headers[$key] = $value;
+            }
+        }
+
+
+        Logger::RecordLog(['header' => $headers, 'body' => $body], 'debug');
+*/
+
         curl_close($this->ch);
         if ($curl_errno > 0) {
             $error_message = "CURL Error #:" . $curl_errno . " - " . $curl_error;
