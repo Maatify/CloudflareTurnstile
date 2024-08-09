@@ -69,9 +69,9 @@ class TurnstileValidation extends TurnstileRequestCall
         }
         if (! $this->validate()) {
             if (! empty($this->response['error-codes'][0])) {
-                Json::Invalid('cf-turnstile-response', $this->response['error-codes'][0]);
+                Json::captchaInvalid($this->response, $this->response['error-codes'][0]?? '',  __LINE__);
             }
-            Json::Invalid('cf-turnstile-response', Json::JsonFormat($this->response));
+            Json::captchaInvalid($this->response, Json::JsonFormat($this->response),  __LINE__);
         }
     }
 
