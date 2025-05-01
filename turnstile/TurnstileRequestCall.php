@@ -142,6 +142,6 @@ abstract class TurnstileRequestCall
         }
         $log['params'] = $this->params;
         $log['url'] = $this->url;
-        Logger::RecordLog($log, 'CloudflareTurnstile/turnstile_' . $file_name . '_' . GeneralFunctions::CurrentMicroTimeStamp());
+        Logger::RecordLog($log, 'CloudflareTurnstile/turnstile_' . $file_name . '_' . (intval(microtime(true) * 1000)));
     }
 }
