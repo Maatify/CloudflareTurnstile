@@ -1,0 +1,24 @@
+{
+  "name": "maatify/cloudflare-turnstile-consumer-harness",
+  "description": "Clean external consumer used to verify maatify/cloudflare-turnstile through Composer.",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "maatify/cloudflare-turnstile": "*@dev"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "__PACKAGE_DIR__",
+      "options": {
+        "symlink": false,
+        "versions": {
+          "maatify/cloudflare-turnstile": "6.0.0"
+        }
+      }
+    }
+  ],
+  "config": {
+    "sort-packages": true
+  }
+}

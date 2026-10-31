@@ -33,4 +33,6 @@ composer analyse
 composer test:regression
 composer test:system
 
+harness/run.sh
+
 composer audit --no-interaction --abandoned=fail
