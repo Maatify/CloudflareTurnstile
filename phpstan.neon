@@ -4,3 +4,4 @@ parameters:
         - turnstile
         - tests
         - scripts
+        - harness
