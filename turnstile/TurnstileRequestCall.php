@@ -23,21 +23,27 @@ use CurlHandle;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
 use Psr\Log\LogLevel;
+use RuntimeException;
 use stdClass;
 
 abstract class TurnstileRequestCall
 {
     protected string $secret_key;
-    private string $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-    private false|CurlHandle $ch;
-    private array $params;
+    private const string URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    private CurlHandle $ch;
+    /** @var array<string, scalar|null> */
+    private array $params = [];
 
     public function __construct(string $secret_key = '')
     {
         if(!empty($secret_key)){
             $this->secret_key = $secret_key;
         }
-        $this->ch = curl_init();
+        $ch = curl_init();
+        if ($ch === false) {
+            throw new RuntimeException('Unable to initialize cURL.');
+        }
+        $this->ch = $ch;
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -51,11 +57,19 @@ abstract class TurnstileRequestCall
 
     }
 
+    /**
+     * @param array<string, scalar|null> $params
+     */
     public function curlPost(array $params): stdClass
     {
         $this->params = $params;
-        curl_setopt($this->ch, CURLOPT_POST, 1);
-        curl_setopt($this->ch, CURLOPT_POSTFIELDS, json_encode($params));
+        $body = json_encode($params);
+        if ($body === false) {
+            $this->logError('Unable to encode request parameters: ' . json_last_error_msg());
+            return $this->failure();
+        }
+        curl_setopt($this->ch, CURLOPT_POST, true);
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, $body);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
         ));
@@ -65,7 +79,7 @@ abstract class TurnstileRequestCall
     public function curlGet(): stdClass
     {
         $this->params = [];
-        curl_setopt($this->ch, CURLOPT_POST, 0);
+        curl_setopt($this->ch, CURLOPT_POST, false);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
         ));
@@ -74,7 +88,7 @@ abstract class TurnstileRequestCall
 
     private function call():stdClass
     {
-        curl_setopt($this->ch, CURLOPT_URL, $this->url);
+        curl_setopt($this->ch, CURLOPT_URL, $this->endpoint());
 
 //        curl_setopt($this->ch, CURLOPT_HEADER, true);
         $result = curl_exec($this->ch);
@@ -102,13 +116,13 @@ abstract class TurnstileRequestCall
         Logger::RecordLog(['header' => $headers, 'body' => $body], 'debug');
 */
 
-        curl_close($this->ch);
         if ($curl_errno > 0) {
             $error_message = "CURL Error #:" . $curl_errno . " - " . $curl_error;
         } else {
-            if ($resultArray = json_decode($result)) {
-                $this->logSuccess($resultArray);
-                return $resultArray;
+            $resultObject = is_string($result) ? json_decode($result) : null;
+            if ($resultObject instanceof stdClass) {
+                $this->logSuccess($resultObject);
+                return $resultObject;
             } else {
                 $error_message = ($httpCode != 200) ?
                     "Error header response " . $httpCode
@@ -118,12 +132,27 @@ abstract class TurnstileRequestCall
             }
         }
         $this->logError($error_message);
+        return $this->failure();
+    }
+
+    /**
+     * Verification endpoint; overridable so tests can target a local deterministic server.
+     *
+     * @return non-empty-string
+     */
+    protected function endpoint(): string
+    {
+        return self::URL;
+    }
+
+    private function failure(): stdClass
+    {
         $obj = new stdClass();
         $obj->success = false;
         return $obj;
     }
 
-    private function logSuccess(array|stdClass $result): void
+    private function logSuccess(stdClass $result): void
     {
         $this->log('success', LogLevel::INFO, success: $result);
     }
@@ -133,16 +162,17 @@ abstract class TurnstileRequestCall
         $this->log('failed', LogLevel::ERROR, error_details: $message);
     }
 
-    private function log(string $file_name, string $level, string $error_details = '', array|stdClass $success = []): void
+    private function log(string $file_name, string $level, string $error_details = '', ?stdClass $success = null): void
     {
+        $log = [];
         if(!empty($error_details)){
             $log['error'] = $error_details;
         }
-        if(!empty($success)){
+        if ($success !== null && (array)$success !== []) {
             $log['response'] = (array)$success;
         }
         $log['params'] = $this->params;
-        $log['url'] = $this->url;
+        $log['url'] = $this->endpoint();
         Logger::RecordLog(
             $log,
             level: $level,

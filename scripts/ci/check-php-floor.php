@@ -10,16 +10,18 @@ declare(strict_types=1);
 
 const PHP_PATCH_FLOORS = ['8.4' => '8.4.27', '8.5' => '8.5.12'];
 
-$minor = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
-fwrite(STDOUT, 'Installed PHP: ' . PHP_VERSION . ' (PHP_VERSION_ID ' . PHP_VERSION_ID . ")\n");
+// phpversion() is read at runtime; PHPStan folds PHP_VERSION constants to its configured target.
+$version = phpversion();
+$minor = implode('.', array_slice(explode('.', $version), 0, 2));
+fwrite(STDOUT, 'Installed PHP: ' . $version . ' (PHP_VERSION_ID ' . PHP_VERSION_ID . ")\n");
 
 if (!isset(PHP_PATCH_FLOORS[$minor])) {
     fwrite(STDERR, "No security patch floor is defined for PHP $minor.\n");
     exit(1);
 }
 
-if (version_compare(PHP_VERSION, PHP_PATCH_FLOORS[$minor], '<')) {
-    fwrite(STDERR, 'PHP ' . PHP_VERSION . ' is below the ' . $minor . ' floor ' . PHP_PATCH_FLOORS[$minor] . ".\n");
+if (version_compare($version, PHP_PATCH_FLOORS[$minor], '<')) {
+    fwrite(STDERR, 'PHP ' . $version . ' is below the ' . $minor . ' floor ' . PHP_PATCH_FLOORS[$minor] . ".\n");
     exit(1);
 }
 
