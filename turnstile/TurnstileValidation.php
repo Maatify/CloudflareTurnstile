@@ -25,6 +25,7 @@ class TurnstileValidation extends TurnstileRequestCall
 {
 
     public ?bool $success = null;
+    /** @var array<mixed> */
     public array $response = [];
 
     private static ?self $instance = null;
@@ -40,13 +41,14 @@ class TurnstileValidation extends TurnstileRequestCall
 
     private function curlValidation(): bool
     {
+        $token = $_POST['cf-turnstile-response'] ?? '';
         $params = array(
             'secret'   => $this->secret_key,
-            'response' => $_POST['cf-turnstile-response'] ?? '',
+            'response' => is_string($token) ? $token : '',
         );
 
         $response_data = $this->curlPost($params);
-        $this->response = (array)$response_data;
+        $this->response = get_object_vars($response_data);
 
         $this->success = (isset($response_data->success) && $response_data->success);
 
@@ -68,8 +70,9 @@ class TurnstileValidation extends TurnstileRequestCall
             Json::Missing('cf-turnstile-response');
         }
         if (! $this->validate()) {
-            if (! empty($this->response['error-codes'][0])) {
-                Json::captchaInvalid($this->response, $this->response['error-codes'][0]?? '',  __LINE__);
+            $errorCodes = $this->response['error-codes'] ?? null;
+            if (is_array($errorCodes) && isset($errorCodes[0]) && is_string($errorCodes[0]) && $errorCodes[0] !== '') {
+                Json::captchaInvalid($this->response, $errorCodes[0], __LINE__);
             }
             Json::captchaInvalid($this->response, Json::JsonFormat($this->response),  __LINE__);
         }
@@ -80,6 +83,9 @@ class TurnstileValidation extends TurnstileRequestCall
         return $this->validate();
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getResponse(): array
     {
         $this->validate();

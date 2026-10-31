@@ -17,7 +17,8 @@ const SUPPORTED_FLOORS = ['8.4' => '8.4.27', '8.5' => '8.5.12'];
 const FIRST_MINOR_WITHOUT_FLOOR = '8.6.0';
 
 $composer = json_decode((string)file_get_contents(__DIR__ . '/../../composer.json'), true, flags: JSON_THROW_ON_ERROR);
-$constraint = $composer['require']['php'] ?? null;
+$require = is_array($composer) ? ($composer['require'] ?? null) : null;
+$constraint = is_array($require) ? ($require['php'] ?? null) : null;
 if (!is_string($constraint)) {
     fwrite(STDERR, "composer.json has no require.php.\n");
     exit(1);

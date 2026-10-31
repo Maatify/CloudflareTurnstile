@@ -18,7 +18,8 @@ final class LoggerLevelTest extends TestCase
     public function testRecordLogCallsUsePsr3Level(): void
     {
         $calls = 0;
-        foreach (glob(__DIR__ . '/../turnstile/*.php') as $file) {
+        $found = 0;
+        foreach (self::sourceFiles() as $file) {
             $violations = self::recordLogViolations((string)file_get_contents($file), $found);
             $calls += $found;
             $this->assertSame([], $violations, basename($file));
@@ -29,7 +30,8 @@ final class LoggerLevelTest extends TestCase
     public function testLogCallsPassPsr3LevelConstant(): void
     {
         $calls = 0;
-        foreach (glob(__DIR__ . '/../turnstile/*.php') as $file) {
+        $found = 0;
+        foreach (self::sourceFiles() as $file) {
             $violations = self::logCallViolations((string)file_get_contents($file), $found);
             $calls += $found;
             $this->assertSame([], $violations, basename($file));
@@ -39,6 +41,7 @@ final class LoggerLevelTest extends TestCase
 
     public function testDetectsNonPsr3LevelInRecordLog(): void
     {
+        $found = 0;
         $bad = '<?php Logger::RecordLog($log, "CloudflareTurnstile/file");';
         $this->assertNotSame([], self::recordLogViolations($bad, $found));
         $bad = '<?php Logger::RecordLog($log, level: "file_name", logFile: "x");';
@@ -49,6 +52,7 @@ final class LoggerLevelTest extends TestCase
 
     public function testDetectsNonPsr3LevelInLogCalls(): void
     {
+        $found = 0;
         $bad = '<?php $this->log("success", "invalid-level", success: $r); $this->log("failed", LogLevel::ERROR, error_details: $m);';
         $this->assertCount(1, self::logCallViolations($bad, $found));
         $this->assertSame(2, $found);
@@ -57,7 +61,7 @@ final class LoggerLevelTest extends TestCase
     }
 
     /** @return list<string> */
-    private static function recordLogViolations(string $code, ?int &$found): array
+    private static function recordLogViolations(string $code, int &$found): array
     {
         $code = self::stripComments($code);
         preg_match_all('/Logger::RecordLog\((.*?)\);/s', $code, $m);
@@ -77,7 +81,7 @@ final class LoggerLevelTest extends TestCase
     }
 
     /** @return list<string> */
-    private static function logCallViolations(string $code, ?int &$found): array
+    private static function logCallViolations(string $code, int &$found): array
     {
         $code = self::stripComments($code);
         preg_match_all('/\$this->log\(\s*([^,)]+)\s*(?:,\s*([^,)]+))?/', $code, $m, PREG_SET_ORDER);
@@ -90,6 +94,16 @@ final class LoggerLevelTest extends TestCase
             }
         }
         return $violations;
+    }
+
+    /** @return list<string> */
+    private static function sourceFiles(): array
+    {
+        $files = glob(__DIR__ . '/../turnstile/*.php');
+        if ($files === false) {
+            self::fail('Unable to list turnstile/*.php');
+        }
+        return $files;
     }
 
     private static function isPsr3Level(string $value): bool

@@ -28,6 +28,8 @@ find turnstile tests scripts -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/n
 
 scripts/ci/check-whitespace.sh
 
+composer analyse
+
 vendor/bin/phpunit tests
 
 composer audit --no-interaction --abandoned=fail
