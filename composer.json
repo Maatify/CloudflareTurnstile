@@ -44,14 +44,24 @@
     }
   ],
   "require": {
+    "php": ">=8.4.27 <8.5.0 || >=8.5.12 <8.6.0",
+    "psr/log": "^3",
     "ext-curl": "*",
-    "maatify/logger": "^5",
+    "maatify/logger": "^5.1 || ^7.0",
     "maatify/functions": "^5",
     "maatify/json": "^5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11 || ^12"
   },
   "autoload": {
     "psr-4": {
       "Maatify\\Turnstile\\": "turnstile/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Maatify\\Turnstile\\Tests\\": "tests/"
     }
   }
 }
