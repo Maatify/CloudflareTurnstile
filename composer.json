@@ -16,36 +16,6 @@
       "name": "Maatify",
       "email": "support@maatify.dev",
       "homepage": "https://maatify.dev"
-    },
-    {
-      "name": "Mohamed Abdulalim",
-      "email": "mohamed@maatify.dev",
-      "homepage": "https://maatify.dev",
-      "role": "Backend Developer"
-    },
-    {
-      "name": "Ahmed Fawzy",
-      "email": "a.fawzy@maatify.dev",
-      "homepage": "https://maatify.dev",
-      "role": "Frontend Developer"
-    },
-    {
-      "name": "Mohaned Saeed Sami",
-      "email": "mohaned.saeed@maatify.dev",
-      "homepage": "https://maatify.dev",
-      "role": "Frontend Developer"
-    },
-    {
-      "name": "Ahmed Abdullah",
-      "email": "a.abdullah@maatify.dev",
-      "homepage": "https://maatify.dev",
-      "role": "Android Developer"
-    },
-    {
-      "name": "Elmokhtar Ahmed",
-      "email": "mokhtar@maatify.dev",
-      "homepage": "https://maatify.dev",
-      "role": "IOS Developer"
     }
   ],
   "support": {
