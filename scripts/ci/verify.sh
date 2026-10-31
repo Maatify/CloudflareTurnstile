@@ -26,10 +26,7 @@ php scripts/ci/check-php-constraint.php
 
 find turnstile tests scripts -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
 
-# Whitespace defects introduced since the comparison base (CI sets CI_DIFF_BASE;
-# locally it defaults to the merge-base with origin/main).
-diff_base="${CI_DIFF_BASE:-$(git merge-base HEAD origin/main)}"
-git diff --check "${diff_base}" HEAD
+scripts/ci/check-whitespace.sh
 
 vendor/bin/phpunit tests
 
