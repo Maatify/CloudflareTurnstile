@@ -1,0 +1,19 @@
+{
+    "provider": "Cloudflare Turnstile",
+    "capability": "siteverify (server-side token validation)",
+    "documentation": "https://developers.cloudflare.com/turnstile/get-started/server-side-validation/",
+    "retrieved": "2026-11-01",
+    "contains_real_secrets": false,
+    "live_verification": "Not part of baseline CI. Cloudflare publishes dummy secret keys for testing; a controlled live check is an outstanding assessment recorded in the package documentation, and this deterministic set does not prove current remote truth.",
+    "fixtures": {
+        "success.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Success response shape per the official documentation; values are synthetic."},
+        "success-with-optional-fields.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Adds the documented optional fields (action, cdata, metadata.ephemeral_id); values are synthetic."},
+        "failure-missing-input-secret.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-invalid-input-secret.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-missing-input-response.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-invalid-input-response.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-bad-request.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-timeout-or-duplicate.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."},
+        "failure-internal-error.json": {"source_kind": "SYNTHETIC_CONTRACT_CASE", "note": "Documented error code, constructed response."}
+    }
+}
