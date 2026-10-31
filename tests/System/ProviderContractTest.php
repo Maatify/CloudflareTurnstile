@@ -37,15 +37,16 @@ final class ProviderContractTest extends TestCase
         $this->assertSame('{"secret":"s3cret","response":"tok"}', $result->raw);
     }
 
-    public function testValidationSendsTheSecretAndThePostedToken(): void
+    public function testValidationRequestCarriesTheConfiguredSecretAndThePostedToken(): void
     {
         $_POST['cf-turnstile-response'] = 'posted-token';
+        $validation = new TestValidation(self::$baseUrl . '/capture');
 
-        $result = (new TestCall(self::$baseUrl . '/capture'))->curlPost(['secret' => 'k', 'response' => 'posted-token']);
-        $this->assertSame('{"secret":"k","response":"posted-token"}', $result->raw);
-
-        $validation = new TestValidation(self::$baseUrl . '/fixture/success');
         $this->assertTrue($validation->isSuccess());
+        $captured = $validation->getResponse();
+        $this->assertSame('POST', $captured['method']);
+        $this->assertSame('application/json', $captured['content_type']);
+        $this->assertSame('{"secret":"test-secret","response":"posted-token"}', $captured['raw']);
     }
 
     #[DataProvider('successFixtures')]
@@ -115,13 +116,19 @@ final class ProviderContractTest extends TestCase
             $this->assertIsArray($entry);
             $this->assertContains($entry['source_kind'] ?? null, $allowedKinds, "$file has an invalid source_kind");
 
-            $content = (string)file_get_contents(self::FIXTURES . '/' . $file);
-            $this->assertDoesNotMatchRegularExpression('/0x4[A-Za-z0-9_-]{18,}/', $content, "$file looks like a Turnstile key");
-            $this->assertDoesNotMatchRegularExpression('/[A-Za-z0-9_-]{60,}/', $content, "$file contains a token-like string");
+            $this->assertNoSecretLikeContent($file);
         }
+        $this->assertNoSecretLikeContent('PROVENANCE.json');
         foreach (array_keys($provenance['fixtures']) as $listed) {
             $this->assertContains($listed, $fixtureFiles, "$listed is listed but missing");
         }
+    }
+
+    private function assertNoSecretLikeContent(string $file): void
+    {
+        $content = (string)file_get_contents(self::FIXTURES . '/' . $file);
+        $this->assertDoesNotMatchRegularExpression('/0x4[A-Za-z0-9_-]{18,}/', $content, "$file looks like a Turnstile key");
+        $this->assertDoesNotMatchRegularExpression('/[A-Za-z0-9_-]{60,}/', $content, "$file contains a token-like string");
     }
 
     /** @return array<mixed> */
