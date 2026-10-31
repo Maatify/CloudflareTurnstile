@@ -1,18 +1,25 @@
-Proprietary License
+Maatify Proprietary License
 
-Copyright (c) 2023-2026 Maatify. All rights reserved.
+Copyright (c) 2013-2026 Maatify. All rights reserved.
 
-This software and its associated documentation files (the "Software") are the
-proprietary property of Maatify. No part of the Software may be used, copied,
-modified, merged, published, distributed, sublicensed, or sold without the
-prior written permission of Maatify, except as expressly granted in a separate
-written agreement with Maatify.
+This software and its associated documentation are proprietary to Maatify.
+No open-source license is granted. Public repository visibility does not make
+the software open source.
+
+Except for rights necessarily provided by the hosting platform for using that
+platform, no rights are granted to use, copy, modify, distribute, sublicense,
+sell, create derivative works from, or commercially exploit the software
+without prior written authorization or a separate written license agreement
+from Maatify.
+
+Unauthorized use is prohibited.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-MAATIFY BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+MAATIFY OR ITS CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-Contact: support@maatify.dev
+Licensing contact: support@maatify.dev
