@@ -1,58 +1,26 @@
-{  "name": "maatify/cloudflare-turnstile",
-  "description": "Unofficial Turnstile for PHP it's library for maatify.dev Turnstile cloudflare Captcha handler, known by our team",
-  "version": "5.0.1",
-  "type": "library",
+{
+  "name": "maatify/cloudflare-turnstile",
+  "description": "Unofficial PHP library for validating Cloudflare Turnstile CAPTCHA responses.",
   "keywords": [
-    "PHP",
-    "Turnstile",
+    "turnstile",
     "cloudflare",
-    "Handler",
+    "captcha",
+    "php",
     "maatify"
   ],
-  "homepage": "https://github.com/Maatify/",
+  "homepage": "https://github.com/Maatify/CloudflareTurnstile",
+  "type": "library",
   "license": "proprietary",
   "authors": [
     {
-      "name": "Mohamed Abdulalim",
-      "email": "mohamed@maatify.dev",
-      "homepage": "https://www.maatify.com/",
-      "role": "Backend Developer"
-    },
-    {
-      "name": "Ahmed Fawzy",
-      "email": "a.fawzy@maatify.dev",
-      "homepage": "https://www.maatify.com/",
-      "role": "Frontend Developer"
-    },
-    {
-      "name": "Mohaned Saeed Sami",
-      "email": "mohaned.saeed@maatify.dev",
-      "homepage": "https://www.maatify.com/",
-      "role": "Frontend Developer"
-    },
-    {
-      "name": "Ahmed Abdullah",
-      "email": "a.abdullah@maatify.dev",
-      "homepage": "https://www.maatify.com/",
-      "role": "Android Developer"
-    },
-    {
-      "name": "Elmokhtar Ahmed",
-      "email": "mokhtar@maatify.dev",
-      "homepage": "https://www.maatify.com/",
-      "role": "IOS Developer"
+      "name": "Maatify",
+      "email": "support@maatify.dev",
+      "homepage": "https://maatify.dev"
     }
   ],
-  "require": {
-    "php": ">=8.4.27 <8.5.0 || >=8.5.12 <8.6.0",
-    "psr/log": "^3",
-    "ext-curl": "*",
-    "maatify/logger": "^5.1 || ^7.0",
-    "maatify/functions": "^5",
-    "maatify/json": "^5.0.4"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^11 || ^12"
+  "support": {
+    "issues": "https://github.com/Maatify/CloudflareTurnstile/issues",
+    "source": "https://github.com/Maatify/CloudflareTurnstile"
   },
   "autoload": {
     "psr-4": {
@@ -63,5 +31,39 @@
     "psr-4": {
       "Maatify\\Turnstile\\Tests\\": "tests/"
     }
-  }
+  },
+  "require": {
+    "ext-curl": "*",
+    "maatify/functions": "^5",
+    "maatify/json": "^5.0.4",
+    "maatify/logger": "^5.1 || ^7.0",
+    "php": ">=8.4.27 <8.5.0 || >=8.5.12 <8.6.0",
+    "psr/log": "^3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11 || ^12"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": {
+      "php": "8.4.27"
+    },
+    "policy": {
+      "advisories": {
+        "block": true,
+        "audit": "fail"
+      },
+      "malware": {
+        "block": true,
+        "block-scope": "all",
+        "audit": "fail"
+      },
+      "abandoned": {
+        "audit": "fail"
+      }
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
