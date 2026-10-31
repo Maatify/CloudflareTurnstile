@@ -41,6 +41,7 @@
     "psr/log": "^3"
   },
   "require-dev": {
+    "composer/semver": "^3.4",
     "phpunit/phpunit": "^11 || ^12"
   },
   "config": {
