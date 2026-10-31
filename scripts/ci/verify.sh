@@ -13,13 +13,15 @@ case "$mode" in
     *) echo "Unknown dependency mode: $mode" >&2; exit 2 ;;
 esac
 
+# Actual interpreter patch floor first, before any Composer work (CI_WORKFLOW_STANDARD §7.1).
+php scripts/ci/check-php-floor.php
+
 composer --version
 composer validate --strict
 
 composer update ${update_flags[@]+"${update_flags[@]}"} --no-interaction --prefer-dist --no-progress
 composer check-platform-reqs
 
-php scripts/ci/check-php-floor.php
 php scripts/ci/check-php-constraint.php
 
 find turnstile tests scripts -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
