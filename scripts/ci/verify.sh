@@ -24,7 +24,7 @@ composer check-platform-reqs
 
 php scripts/ci/check-php-constraint.php
 
-find turnstile tests scripts -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
+find turnstile tests scripts harness -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
 
 scripts/ci/check-whitespace.sh
 
@@ -33,6 +33,6 @@ composer analyse
 composer test:regression
 composer test:system
 
-harness/run.sh
+harness/run.sh "${mode}"
 
 composer audit --no-interaction --abandoned=fail

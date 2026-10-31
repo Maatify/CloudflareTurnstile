@@ -28,6 +28,9 @@ if (!is_string($base) || $base === '') {
 
 final class ConsumerValidation extends TurnstileValidation
 {
+    /**
+     * @param non-empty-string $endpointUrl
+     */
     public function __construct(private readonly string $endpointUrl)
     {
         parent::__construct('consumer-secret');

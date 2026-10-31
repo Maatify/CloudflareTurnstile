@@ -6,10 +6,20 @@
 # The whole cycle runs twice, each from a fresh temporary state with its own
 # provider stand-in, request log and consumer root.
 #
+# Usage: harness/run.sh [latest|lowest]. `lowest` resolves the consumer's whole
+# dependency graph with --prefer-lowest --prefer-stable, like the repository gate.
+#
 # Cloudflare is never contacted. Optional local-only knob: HARNESS_COMPOSER_ARGS
 # (never set in CI), e.g. when the local PHP is below the declared patch floor;
 # it also skips the platform check, which CI always runs.
 set -euo pipefail
+
+mode="${1:-latest}"
+case "${mode}" in
+    latest) update_flags=() ;;
+    lowest) update_flags=(--prefer-lowest --prefer-stable) ;;
+    *) echo "Unknown dependency mode: ${mode}" >&2; exit 2 ;;
+esac
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck disable=SC2206
@@ -37,7 +47,7 @@ cleanup() {
 trap cleanup EXIT
 
 for run in 1 2; do
-    echo "== Consumer harness run ${run}/2"
+    echo "== Consumer harness run ${run}/2 (dependencies: ${mode})"
     state="${work}/run-${run}"
     package="${state}/package"
     consumer="${state}/consumer"
@@ -60,8 +70,11 @@ for run in 1 2; do
     cp "${root}/harness/consumer/workflow.php" "${consumer}/workflow.php"
     sed "s|__PACKAGE_DIR__|${package}|" "${root}/harness/consumer/composer.json" > "${consumer}/composer.json"
 
-    (cd "${consumer}" && composer update --no-interaction --prefer-dist --no-progress ${composer_args[@]+"${composer_args[@]}"}) \
+    (cd "${consumer}" && composer update ${update_flags[@]+"${update_flags[@]}"} --no-interaction --prefer-dist --no-progress ${composer_args[@]+"${composer_args[@]}"}) \
         || fail "Composer could not install the package into the consumer"
+    # shellcheck disable=SC2016
+    resolved="$(cd "${consumer}" && composer show --format=json | php -r '$p = json_decode((string)stream_get_contents(STDIN), true)["installed"]; foreach ($p as $x) { if (str_starts_with($x["name"], "maatify/")) { $o[] = $x["name"] . " " . $x["version"]; } } echo implode(", ", $o ?? []);')"
+    echo "   consumer resolved: ${resolved}"
     if [[ -z "${HARNESS_COMPOSER_ARGS:-}" ]]; then
         (cd "${consumer}" && composer check-platform-reqs) || fail "platform requirements are not satisfied"
     fi
