@@ -31,7 +31,7 @@ abstract class TurnstileRequestCall
     protected string $secret_key;
     private const string URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
     private CurlHandle $ch;
-    /** @var array<string, string> */
+    /** @var array<string, scalar|null> */
     private array $params = [];
 
     public function __construct(string $secret_key = '')
@@ -58,7 +58,7 @@ abstract class TurnstileRequestCall
     }
 
     /**
-     * @param array<string, string> $params
+     * @param array<string, scalar|null> $params
      */
     public function curlPost(array $params): stdClass
     {
@@ -88,7 +88,7 @@ abstract class TurnstileRequestCall
 
     private function call():stdClass
     {
-        curl_setopt($this->ch, CURLOPT_URL, self::URL);
+        curl_setopt($this->ch, CURLOPT_URL, $this->endpoint());
 
 //        curl_setopt($this->ch, CURLOPT_HEADER, true);
         $result = curl_exec($this->ch);
@@ -116,7 +116,6 @@ abstract class TurnstileRequestCall
         Logger::RecordLog(['header' => $headers, 'body' => $body], 'debug');
 */
 
-        curl_close($this->ch);
         if ($curl_errno > 0) {
             $error_message = "CURL Error #:" . $curl_errno . " - " . $curl_error;
         } else {
@@ -134,6 +133,16 @@ abstract class TurnstileRequestCall
         }
         $this->logError($error_message);
         return $this->failure();
+    }
+
+    /**
+     * Verification endpoint; overridable so tests can target a local deterministic server.
+     *
+     * @return non-empty-string
+     */
+    protected function endpoint(): string
+    {
+        return self::URL;
     }
 
     private function failure(): stdClass
@@ -163,7 +172,7 @@ abstract class TurnstileRequestCall
             $log['response'] = (array)$success;
         }
         $log['params'] = $this->params;
-        $log['url'] = self::URL;
+        $log['url'] = $this->endpoint();
         Logger::RecordLog(
             $log,
             level: $level,
