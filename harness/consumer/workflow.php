@@ -10,6 +10,11 @@ use Maatify\Turnstile\TurnstileValidation;
  * redirected to the harness's deterministic local stand-in through the
  * documented protected extension point; Cloudflare is never contacted.
  *
+ * Limits of the extension point: `endpoint()` only changes the URL the library
+ * posts to; request construction, serialization, response mapping and logging
+ * remain the library's production code. A consumer must not rely on it to alter
+ * the request contract.
+ *
  * Usage: php workflow.php <endpoint-base-url>
  */
 
@@ -48,7 +53,12 @@ foreach (['valid-token' => '/valid', 'invalid-token' => '/invalid'] as $token =>
     ];
 }
 
+$psr4Map = (string)file_get_contents($vendorRoot . '/composer/autoload_psr4.php');
+
 echo json_encode([
     'loaded_from_vendor' => str_starts_with((string)realpath($packageFile), $vendorRoot . DIRECTORY_SEPARATOR),
+    // The consumer must not see the package's autoload-dev or test namespace.
+    'test_autoload_absent' => !class_exists('Maatify\\Turnstile\\Tests\\Support\\TestCall')
+        && !str_contains($psr4Map, 'Turnstile\\\\Tests'),
     'results' => $results,
 ], JSON_THROW_ON_ERROR), "\n";
