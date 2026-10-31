@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests;
+namespace Maatify\Turnstile\Tests\System;
 
 use Maatify\Turnstile\Tests\Support\TestCall;
 use Maatify\Turnstile\Tests\Support\TestValidation;
@@ -35,7 +35,7 @@ final class TurnstileBehaviorTest extends TestCase
             '%s -S 127.0.0.1:%d %s >/dev/null 2>&1 & echo $!',
             escapeshellarg(PHP_BINARY),
             $port,
-            escapeshellarg(__DIR__ . '/Support/router.php')
+            escapeshellarg(__DIR__ . '/../Support/router.php')
         );
         self::$serverPid = (int)trim((string)shell_exec($command));
         self::$baseUrl = "http://127.0.0.1:$port";
@@ -143,7 +143,7 @@ final class TurnstileBehaviorTest extends TestCase
         $command = sprintf(
             '%s -d display_errors=0 %s %s 2>/dev/null',
             escapeshellarg(PHP_BINARY),
-            escapeshellarg(__DIR__ . '/Support/json_errors_runner.php'),
+            escapeshellarg(__DIR__ . '/../Support/json_errors_runner.php'),
             escapeshellarg(self::$baseUrl . $path)
         );
         $stdout = (string)shell_exec($command);

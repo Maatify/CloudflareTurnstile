@@ -46,7 +46,10 @@
     "phpunit/phpunit": "^11 || ^12"
   },
   "scripts": {
-    "analyse": "phpstan analyse --no-progress --memory-limit=512M"
+    "analyse": "phpstan analyse --no-progress --memory-limit=512M",
+    "test": "phpunit",
+    "test:regression": "phpunit --testsuite regression",
+    "test:system": "phpunit --testsuite system"
   },
   "config": {
     "optimize-autoloader": true,
