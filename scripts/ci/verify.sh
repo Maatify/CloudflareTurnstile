@@ -30,6 +30,7 @@ scripts/ci/check-whitespace.sh
 
 composer analyse
 
-vendor/bin/phpunit tests
+composer test:regression
+composer test:system
 
 composer audit --no-interaction --abandoned=fail

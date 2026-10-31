@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests;
+namespace Maatify\Turnstile\Tests\Regression;
 
 use PHPUnit\Framework\TestCase;
 
@@ -99,7 +99,7 @@ final class LoggerLevelTest extends TestCase
     /** @return list<string> */
     private static function sourceFiles(): array
     {
-        $files = glob(__DIR__ . '/../turnstile/*.php');
+        $files = glob(__DIR__ . '/../../turnstile/*.php');
         if ($files === false) {
             self::fail('Unable to list turnstile/*.php');
         }
