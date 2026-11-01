@@ -33,6 +33,7 @@ composer analyse
 composer test:regression
 composer test:system
 scripts/ci/smoke-examples.sh
+scripts/ci/check-archive.sh
 
 harness/run.sh "${mode}"
 
