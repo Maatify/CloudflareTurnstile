@@ -86,12 +86,21 @@ final class SensitiveLoggingTest extends TestCase
         }
     }
 
-    /** @return array<string, int> */
+    /**
+     * maatify/logger resolves its log directory relative to its own location
+     * (a different depth per version), so every candidate directory is watched.
+     *
+     * @return array<string, int>
+     */
     private function logSizes(): array
     {
-        $root = dirname(__DIR__, 2) . '/logs';
+        $loggerFile = (string)(new \ReflectionClass(\Maatify\Logger\Logger::class))->getFileName();
+        $roots = [dirname($loggerFile, 3) . '/logs', dirname($loggerFile, 5) . '/logs', dirname(__DIR__, 2) . '/logs'];
         $sizes = [];
-        if (is_dir($root)) {
+        foreach (array_unique($roots) as $root) {
+            if (!is_dir($root)) {
+                continue;
+            }
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS)) as $file) {
                 if ($file instanceof \SplFileInfo && $file->isFile()) {
                     $sizes[$file->getPathname()] = $file->getSize();
