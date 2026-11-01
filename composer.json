@@ -25,7 +25,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Maatify\\Turnstile\\": "turnstile/"
+      "Maatify\\Turnstile\\": [
+        "src/Adapter/",
+        "src/Service/"
+      ]
     }
   },
   "autoload-dev": {
