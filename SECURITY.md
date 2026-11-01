@@ -5,14 +5,16 @@
 
 ## Supported Versions
 
-At `6.0.0` release qualification, `5.x` was the published and supported release line; it receives security maintenance fixes only. It is intended for applications that cannot yet run PHP 8.4 or newer. Users should upgrade to the latest available `5.x` version before reporting a vulnerability.
+The actively supported release line is `6.x`.
 
-This tree is the artifact for release `6.0.0`, which, as of the `6.0.0` release qualification, had **not yet been published**. Release preparation does not make `6.x` a supported line: it becomes supported only once `6.0.0` is published and available to consumers. From that point `6.x` is the actively supported line and `5.x` remains security-maintenance only.
+Security fixes are provided in the latest stable release within the supported `6.x` line. Users should upgrade to the latest available `6.x` version before reporting a vulnerability.
+
+The `5.x` line receives security maintenance fixes only, for applications that cannot yet run PHP 8.4 or newer. Users should upgrade to the latest available `5.x` version before reporting a vulnerability.
 
 | Version | Supported |
 |---------|-----------|
+| `6.x`   | Yes       |
 | `5.x`   | Security fixes only |
-| `6.0.0` (this artifact) | Supported once published (not yet published at qualification) |
 | Older lines | No    |
 
 ## Reporting a Vulnerability

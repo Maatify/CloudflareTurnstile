@@ -30,9 +30,11 @@ fi
 
 commit="$(git -C "${root}" rev-parse --verify "${ref}^{commit}")"
 tree="$(git -C "${root}" rev-parse "${commit}^{tree}")"
-target="$(git -C "${root}" show "${commit}:CHANGELOG.md" | sed -n 's/^## \[\([0-9][0-9A-Za-z.+-]*\)\]$/\1/p' | head -n 1)"
+# The newest CHANGELOG section is the target: undated before publication, dated
+# after it (the live default branch records the actual date).
+target="$(git -C "${root}" show "${commit}:CHANGELOG.md" | sed -n -E 's/^## \[([0-9][0-9A-Za-z.+-]*)\]( - [0-9]{4}-[0-9]{2}-[0-9]{2})?$/\1/p' | head -n 1)"
 if [ -z "${target}" ]; then
-    echo "No undated exact-target section found in CHANGELOG.md at ${commit}." >&2
+    echo "No exact-target section found in CHANGELOG.md at ${commit}." >&2
     exit 1
 fi
 
