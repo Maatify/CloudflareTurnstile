@@ -21,6 +21,7 @@ composer validate --strict
 
 composer update ${update_flags[@]+"${update_flags[@]}"} --no-interaction --prefer-dist --no-progress
 composer check-platform-reqs
+composer dump-autoload --optimize --strict-psr --no-interaction
 
 php scripts/ci/check-php-constraint.php
 
