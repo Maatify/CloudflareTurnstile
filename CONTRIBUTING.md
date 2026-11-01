@@ -4,7 +4,7 @@ Thank you for helping improve `maatify/cloudflare-turnstile`.
 
 ## Package identity
 
-`maatify/cloudflare-turnstile` is a PHP library that validates Cloudflare Turnstile tokens on the server by calling the Turnstile `siteverify` endpoint and exposing the result through `Maatify\Turnstile\TurnstileValidation`.
+`maatify/cloudflare-turnstile` is a PHP library that validates Cloudflare Turnstile tokens on the server by calling the Turnstile `siteverify` endpoint and exposing the result through `Maatify\CloudflareTurnstile\Service\TurnstileValidation`.
 
 ## Package boundaries
 
