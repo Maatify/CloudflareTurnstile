@@ -30,6 +30,8 @@ abstract class TurnstileRequestCall
 {
     protected string $secret_key;
     private const string URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    /** Response fields safe to log; everything else (e.g. cdata, metadata) is omitted. */
+    private const array LOGGED_RESPONSE_FIELDS = ['success', 'error-codes', 'hostname', 'action', 'challenge_ts'];
     private CurlHandle $ch;
     /** @var array<string, scalar|null> */
     private array $params = [];
@@ -168,10 +170,14 @@ abstract class TurnstileRequestCall
         if(!empty($error_details)){
             $log['error'] = $error_details;
         }
-        if ($success !== null && (array)$success !== []) {
-            $log['response'] = (array)$success;
+        if ($success !== null) {
+            $response = array_intersect_key((array)$success, array_flip(self::LOGGED_RESPONSE_FIELDS));
+            if ($response !== []) {
+                $log['response'] = $response;
+            }
         }
-        $log['params'] = $this->params;
+        // Parameter values (secret, token, remote IP) are never logged; names only.
+        $log['param_names'] = array_keys($this->params);
         $log['url'] = $this->endpoint();
         Logger::RecordLog(
             $log,

@@ -108,7 +108,7 @@ Every call that reaches Cloudflare or fails while preparing the request writes o
 - Level `info`, log file `turnstile_success_…`: a response that decodes to a JSON object was received. This is logged whatever the value of its `success` field, so a validation rejected by Cloudflare (`success: false`) is also logged at `info`; use the returned result, not the log level, to learn the outcome.
 - Level `error`, log file `turnstile_failed_…`: a transport (cURL) error, an empty or non-object response (the message names the HTTP status when it is not 200), or request parameters that cannot be JSON-encoded.
 
-The entry also contains the request parameters and the endpoint URL.
+The entry contains the endpoint URL and the request parameter names (`param_names`), never their values: the secret key, the Turnstile token and the `remoteip` value of the library's request are not logged. This covers what the library passes to the logger; it does not control other operational data (for example a client address) that the logger itself may record. A logged response keeps only `success`, `error-codes`, `hostname`, `action` and `challenge_ts`; other fields such as `cdata` and `metadata` are omitted.
 
 ## Extension point
 

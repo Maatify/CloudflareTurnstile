@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Log entries no longer contain request parameter values: only the parameter names and an allow-listed subset of the response are logged.
 - Log calls passed the log-file name where `maatify/logger` expects the PSR-3 level, which `maatify/logger` 7 rejects with `InvalidArgumentException`. They now pass `level` (`info` on success, `error` on failure) and `logFile` separately, so `maatify/logger` 7 can be installed.
 - A request whose parameters cannot be JSON-encoded now returns an unsuccessful result and logs the error instead of sending an empty request.
 - A response that is valid JSON but not an object (for example a number, a string, a list or `null`) is now treated as an unsuccessful validation instead of raising a `TypeError`.
