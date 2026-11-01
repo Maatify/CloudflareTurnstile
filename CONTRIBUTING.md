@@ -42,12 +42,22 @@ composer test:regression
 composer test:system
 ```
 
-`scripts/ci/verify.sh` runs the complete CI gate locally, in latest or lowest dependency mode, and `harness/run.sh` runs the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API):
+CI runs two required jobs, and the `CI gate` check aggregates both: the `Verify` matrix and `Workflow lint`.
+
+`scripts/ci/verify.sh` runs everything the `Verify` matrix runs, in latest or lowest dependency mode: Composer validation and resolution, platform requirements, the PHP patch floor and `require.php` boundary checks, syntax, whitespace, PHPStan, the regression and system suites, the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API), and `composer audit`:
 
 ```bash
 scripts/ci/verify.sh latest
 scripts/ci/verify.sh lowest
-harness/run.sh latest
+```
+
+The harness can also be run on its own with `harness/run.sh latest` (or `lowest`).
+
+`Workflow lint` is not part of `verify.sh`. Run it locally with the same pinned `actionlint` version as CI (`1.7.12`; `ACTIONLINT_VERSION` in `.github/workflows/ci.yml` is the source of truth, and the release archive is verified against the `ACTIONLINT_SHA256` there):
+
+```bash
+actionlint --version   # must report 1.7.12
+actionlint .github/workflows/*.yml
 ```
 
 The gate checks the PHP patch floor of the interpreter it runs on, so use a PHP version within the declared constraint. The harness packages the committed tree (`git archive HEAD`), so commit your changes before running it.
@@ -57,7 +67,7 @@ The gate checks the PHP patch floor of the interpreter it runs on, so use a PHP 
 - Every bug fix needs a regression test that fails without the fix.
 - New observable behavior needs a system-level test through the public API.
 - Tests never contact Cloudflare. They use the local deterministic provider stand-in in `tests/Support` and the fixtures in `tests/Fixtures/siteverify`; new fixtures need an entry in `PROVENANCE.json` and must contain no real secrets or tokens.
-- This library has no database or other service, so there are no Integration suites to provision.
+- This library has no database or other repository-controlled service that CI could provision, so there are no Integration suites. Cloudflare Turnstile is an externally controlled provider: it is verified deterministically with the fixtures above, and any live check against it is a separate, controlled verification that is never part of baseline CI.
 - PHPStan runs at level `max` with no baseline and no suppressions; fix the underlying type issue instead.
 
 ## Pull requests
