@@ -20,7 +20,8 @@
   ],
   "support": {
     "issues": "https://github.com/Maatify/CloudflareTurnstile/issues",
-    "source": "https://github.com/Maatify/CloudflareTurnstile"
+    "source": "https://github.com/Maatify/CloudflareTurnstile",
+    "security": "https://github.com/Maatify/CloudflareTurnstile/security/policy"
   },
   "autoload": {
     "psr-4": {
