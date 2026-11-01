@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The package now declares `php` as `>=8.4.27 <8.5.0 || >=8.5.12 <8.6.0`. Earlier releases declared no PHP constraint. Applications on an older PHP version, or on a PHP patch version below the security floors of 8.4 and 8.5, can no longer install this version.
 - `maatify/logger` now requires `^5.1 || ^7.0` (previously `^5`), because log calls pass an explicit PSR-3 level, which `maatify/logger` supports from `5.1`. `maatify/json` now requires `^5.0.4` (previously `^5`), the release that allows `maatify/logger` 7. `psr/log` `^3` is now a direct dependency.
 
+- The public classes moved to the canonical namespace: `Maatify\Turnstile\TurnstileValidation` is now `Maatify\CloudflareTurnstile\Service\TurnstileValidation`, and `Maatify\Turnstile\TurnstileRequestCall` is now `Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall`. Class names, method signatures and behavior are unchanged; only the `use` statements and any `extends` clauses need to change.
+
 ### Upgrading from 5.x
 
 1. Run the application on PHP 8.4.27 or newer in 8.4, or 8.5.12 or newer in 8.5.
@@ -21,7 +23,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
    ```
 
    A constraint such as `^5.0` in your `composer.json` keeps Composer on 5.x, so `composer update` alone does not upgrade. Make sure `maatify/logger` ends up on `5.1` or newer and `maatify/json` on `5.0.4` or newer; if your project pins them lower, raise those constraints too.
-3. No change to the public classes or method signatures is required.
+3. Update the class references in your code:
+
+   ```php
+   // before (5.x)
+   use Maatify\Turnstile\TurnstileValidation;
+   // after (6.0.0)
+   use Maatify\CloudflareTurnstile\Service\TurnstileValidation;
+   ```
+
+   If you extend the base class, import `Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall` instead of `Maatify\Turnstile\TurnstileRequestCall`. Method signatures are unchanged.
 
 ### Added
 
@@ -31,7 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - `composer.json` metadata (description, keywords, homepage, authors, configuration and dependency policy) now follows the Maatify Composer package standard, and the `version` field was removed: versions come from Git tags.
-- The PHP sources moved from `turnstile/` to `src/Adapter/` and `src/Service/`. Class names and the `Maatify\Turnstile` namespace are unchanged, so consuming code is not affected.
+- The PHP sources moved from `turnstile/` to `src/Adapter/` and `src/Service/`. Class names are unchanged.
 
 ### Fixed
 

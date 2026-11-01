@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests\Support;
+namespace Maatify\CloudflareTurnstile\Tests\Support;
 
-use Maatify\Turnstile\TurnstileRequestCall;
+use Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall;
 
 final class TestCall extends TurnstileRequestCall
 {

@@ -23,24 +23,14 @@ Source Topology: Single Capability
 
 Capability: server-side Turnstile token validation.
 
-The sources live under `src/{Responsibility}/` (the Single Capability layout): `src/Adapter/TurnstileRequestCall.php` (the provider adaptation) and `src/Service/TurnstileValidation.php` (the validation orchestration). Both declare the namespace `Maatify\Turnstile`, which `composer.json` maps to the two directories through one PSR-4 entry. The namespace is the only deviation from the canonical layout and is covered by the exception below.
+The sources live under `src/{Responsibility}/` (the Single Capability layout) and use the canonical namespace `Maatify\CloudflareTurnstile\` (`Maatify\{PackageName}\` plus the responsibility):
 
-### Namespace and class names: Owner-approved exception (release line `6.0.0`)
-
-| Field | Value |
+| Class | File |
 |---|---|
-| Standard | `std-package-building` §5 (Directory Structure Inside `src/`, Deferred Structural Obligation) and the namespace rules |
-| Affected namespace and names | `Maatify\Turnstile\` and the classes `TurnstileRequestCall` and `TurnstileValidation` |
-| Release line | `6.0.0` |
-| Deviation allowed | Keep the public namespace `Maatify\Turnstile` and the two class names instead of moving to the canonical namespace |
-| Evidence and reason | The fully-qualified class names are the documented integration surface of the published `5.x` releases: the `5.0.1` README instructs consumers to `use Maatify\Turnstile\TurnstileValidation;`. Renaming them breaks every consuming application. |
-| Scope boundary | Only the public namespace and the two existing class names. It does not cover file location, and new independent capabilities must use the canonical topology. |
-| Owner approval | Granted by the Owner on 2026-11-01 for the `6.0.0` line. |
-| Migration or review trigger | The next Owner-approved release boundary after `6.0.0` that permits a breaking change. The exception is recorded in `docs/php-engineering-standards/STANDARDS_MANIFEST.md` when the standards adoption artifacts are added. |
+| `Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall` | `src/Adapter/TurnstileRequestCall.php` (provider adaptation) |
+| `Maatify\CloudflareTurnstile\Service\TurnstileValidation` | `src/Service/TurnstileValidation.php` (validation orchestration) |
 
-### File location: standard layout
-
-The PHP files were moved from `turnstile/` to `src/Adapter/` and `src/Service/`, and the PSR-4 mapping in `composer.json` was updated. No fully-qualified class name changed, so consumers are not affected. The exception above does not cover file location, and none is needed.
+`composer.json` maps `Maatify\CloudflareTurnstile\` to `src/`. No structural exception applies: the `5.x` namespace `Maatify\Turnstile\` was replaced in `6.0.0`, a breaking release, and the migration is described in [CHANGELOG.md](CHANGELOG.md).
 
 ## Consumer workflow
 
@@ -55,7 +45,7 @@ Host input → TurnstileValidation → siteverify request → Cloudflare Turnsti
 
 ## Public Runtime API
 
-### `Maatify\Turnstile\TurnstileRequestCall` (abstract)
+### `Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall` (abstract)
 
 Base class that owns the HTTP call.
 
@@ -69,7 +59,7 @@ Base class that owns the HTTP call.
 
 Result of both calls: the decoded response when it is a JSON object; otherwise an object with `success = false`. This happens when cURL fails, when the response is empty or is not a JSON object (a number, string, list or `null`), and when `params` cannot be JSON-encoded (in that case no request is sent).
 
-### `Maatify\Turnstile\TurnstileValidation` (extends `TurnstileRequestCall`)
+### `Maatify\CloudflareTurnstile\Service\TurnstileValidation` (extends `TurnstileRequestCall`)
 
 | Member | Contract |
 |---|---|
@@ -118,5 +108,5 @@ It only changes the URL. Request construction, serialization, response mapping a
 
 ## Compatibility notes
 
-- The `Maatify\Turnstile` namespace, the class names and the signatures above are the public contract of the `6.0.0` line.
+- The `Maatify\CloudflareTurnstile` namespace, the class names and the signatures above are the public contract of the `6.0.0` line.
 - The exact PHP and dependency requirements are those declared in `composer.json`; the changes introduced by `6.0.0` and the upgrade path from `5.x` are in [CHANGELOG.md](CHANGELOG.md).

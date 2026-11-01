@@ -17,8 +17,9 @@
  *
  */
 
-namespace Maatify\Turnstile;
+namespace Maatify\CloudflareTurnstile\Service;
 
+use Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall;
 use Maatify\Json\Json;
 
 class TurnstileValidation extends TurnstileRequestCall
