@@ -94,6 +94,9 @@ final class SensitiveLoggingTest extends TestCase
             }
         };
         $property = new \ReflectionProperty(TurnstileRequestCall::class, 'url');
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
         $property->setValue($call, $url);
         $call->curlPost(['secret' => self::SECRET, 'response' => self::TOKEN, 'remoteip' => self::IP]);
     }

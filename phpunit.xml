@@ -4,8 +4,7 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          failOnWarning="true"
-         failOnRisky="true"
-         cacheDirectory=".phpunit.cache">
+         failOnRisky="true">
     <testsuites>
         <testsuite name="regression">
             <directory>tests</directory>
