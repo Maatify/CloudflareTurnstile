@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Inspects the archive Composer would ship for the committed tree
-# (`git archive HEAD`, which honors .gitattributes export-ignore): every
+# (`git archive <ref>`, default HEAD; which honors .gitattributes export-ignore): every
 # consumer-facing file must be present and no development file may leak in.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/../.." && pwd)"
-listing="$(git -C "${root}" archive HEAD | tar -t)"
+ref="${1:-HEAD}"
+listing="$(git -C "${root}" archive "${ref}" | tar -t)"
 
 required=(
     composer.json LICENSE README.md CHANGELOG.md SECURITY.md CONTRIBUTING.md CODE_OF_CONDUCT.md
@@ -28,5 +29,12 @@ for path in "${excluded[@]}"; do
         status=1
     fi
 done
-[ "${status}" -eq 0 ] && echo "Archive content check passed."
-exit "${status}"
+if [ "${status}" -ne 0 ]; then
+    exit "${status}"
+fi
+echo "Archive content check passed."
+
+extracted="$(mktemp -d)"
+trap 'rm -rf "${extracted}"' EXIT
+git -C "${root}" archive "${ref}" | tar -x -C "${extracted}"
+php "${root}/scripts/ci/check-markdown-links.php" "${extracted}"

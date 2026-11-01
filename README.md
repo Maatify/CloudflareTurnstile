@@ -8,11 +8,11 @@
   <img alt="Maatify.dev" src="https://www.maatify.dev/company-profile/maatify_logo_dark.svg">
 </picture>
 
-[![Release Target](https://img.shields.io/badge/Release%20Target-6.0.0%20(unpublished)-blue)](CHANGELOG.md)
+[![Release Target](https://img.shields.io/badge/Release%20Target-6.0.0-blue)](CHANGELOG.md)
 [![Published at qualification](https://img.shields.io/badge/Published%20at%20qualification-5.0.2-lightgrey)](https://packagist.org/packages/maatify/cloudflare-turnstile)
 [![PHP](https://img.shields.io/badge/PHP-8.4.27%2B%20%7C%208.5.12%2B%20(%3C8.6)-8892BF)](composer.json)
 [![License](https://img.shields.io/badge/License-Proprietary-green)](LICENSE)
-[![PHPStan](https://img.shields.io/badge/PHPStan-Level%20Max-brightgreen)](phpstan.neon)
+[![PHPStan](https://img.shields.io/badge/PHPStan-Level%20Max-brightgreen)](#quality-status)
 [![Maatify Ecosystem](https://img.shields.io/badge/Maatify-Ecosystem-blueviolet)](https://github.com/Maatify)
 
 [![Packagist](https://img.shields.io/badge/Packagist-maatify%2Fcloudflare--turnstile-blue)](https://packagist.org/packages/maatify/cloudflare-turnstile)
@@ -34,7 +34,7 @@ PHP library that validates a Cloudflare Turnstile token on the server and report
 
 ## Package status
 
-This tree is the artifact for release **`6.0.0`**, which is **not published yet**. The version published on Packagist at the time of qualification is `5.0.2`, and it uses the previous namespace; see [Upgrade notes](#upgrade-notes). `6.0.0` is a breaking release: the namespace and the PHP, `maatify/logger` and `maatify/json` requirements changed.
+This tree is the artifact for release **`6.0.0`**, which, as of this release qualification, had **not yet been published**. The version published on Packagist at the time of qualification is `5.0.2`, and it uses the previous namespace; see [Upgrade notes](#upgrade-notes). `6.0.0` is a breaking release: the namespace and the PHP, `maatify/logger` and `maatify/json` requirements changed.
 
 ## Key Features
 
@@ -58,7 +58,7 @@ The authoritative constraints are in [`composer.json`](composer.json).
 composer require maatify/cloudflare-turnstile:6.0.0
 ```
 
-This command resolves through Packagist only **after** `6.0.0` has been published; until then it cannot install this tree. With the constraint `^5.0` an existing project stays on `5.x`, so to move an existing project to `6.x` use `composer require 'maatify/cloudflare-turnstile:^6.0' --with-all-dependencies` once it is published.
+This command resolves through Packagist only once `6.0.0` is published (as of release qualification it was not yet published), so it cannot install this tree before that. With the constraint `^5.0` an existing project stays on `5.x`, so to move an existing project to `6.x` use `composer require 'maatify/cloudflare-turnstile:^6.0' --with-all-dependencies` once it is published.
 
 ## Quick Usage
 

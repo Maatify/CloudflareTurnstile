@@ -77,7 +77,7 @@ Security maintenance release for the `5.x` line.
 
 ## [5.0.1] - 2025-08-10
 
-Published release. Changes made before `6.0.0` are not itemized in this changelog; see the Git history and the [GitHub release](https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.1).
+Published release. The changes in this release are not itemized in this changelog; see the Git history and the [GitHub release](https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.1).
 
 [5.0.2]: https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.2
 [5.0.1]: https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.1
