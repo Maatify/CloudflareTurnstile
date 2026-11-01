@@ -16,7 +16,7 @@ It sends the token and your secret key to the Cloudflare `siteverify` endpoint, 
 
 ### Release status and installation
 
-This guide describes release `6.0.0`, which, as of its release qualification, had **not yet been published**. The published `5.x` line uses the previous namespace, so the code in this guide does not work with it. Once `6.0.0` is published, install it with:
+This guide describes release `6.0.0`. The `5.x` line uses the previous namespace, so the code in this guide does not work with it. Install `6.x` with:
 
 ```bash
 composer require 'maatify/cloudflare-turnstile:^6.0' --with-all-dependencies
