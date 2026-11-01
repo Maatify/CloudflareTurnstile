@@ -46,6 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - `composer.json` metadata (description, keywords, homepage, authors, configuration and dependency policy) now follows the Maatify Composer package standard, and the `version` field was removed: versions come from Git tags.
+- `README.md` was rewritten for 6.0.0 (the 5.x README showed the old namespace and examples).
 - The PHP sources moved from `turnstile/` to `src/Adapter/` and `src/Service/`. Class names are unchanged.
 
 ### Fixed

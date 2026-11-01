@@ -44,7 +44,7 @@ composer test:system
 
 CI runs two required jobs, and the `CI gate` check aggregates both: the `Verify` matrix and `Workflow lint`.
 
-`scripts/ci/verify.sh` runs everything the `Verify` matrix runs, in latest or lowest dependency mode: Composer validation and resolution, platform requirements, the PHP patch floor and `require.php` boundary checks, syntax, whitespace, PHPStan, the regression and system suites, the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API), and `composer audit`:
+`scripts/ci/verify.sh` runs everything the `Verify` matrix runs, in latest or lowest dependency mode: Composer validation and resolution, platform requirements, the PHP patch floor and `require.php` boundary checks, syntax, whitespace, PHPStan, the regression and system suites, the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API), smoke execution of the standalone examples, an inspection of the distribution archive, and `composer audit`:
 
 ```bash
 scripts/ci/verify.sh latest
