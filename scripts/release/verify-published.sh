@@ -9,6 +9,11 @@
 # allows a local rehearsal on any PHP (it adds --ignore-platform-req=php); its
 # record is labelled DRY RUN and never reports PASS.
 #
+# The Composer environment is isolated (CI_WORKFLOW_STANDARD §2.6): temporary
+# COMPOSER_HOME and cache, every inherited COMPOSER_* variable removed, and the
+# consumer pins Packagist as its only repository. The actual install source is
+# read from vendor/composer/installed.json and must be `dist`.
+#
 # Usage: scripts/release/verify-published.sh <version> <expected-commit-sha>
 set -euo pipefail
 
@@ -32,12 +37,29 @@ fi
 work="$(mktemp -d)"
 trap 'rm -rf "${work}"' EXIT
 cd "${work}"
-printf '{"name":"consumer/verify","require":{},"config":{"allow-plugins":false}}\n' > composer.json
+
+# Isolate Composer from the host: no inherited COMPOSER_* settings, no global
+# config, auth or cache.
+while IFS= read -r name; do
+    unset "${name}"
+done < <(compgen -e | grep '^COMPOSER_' || true)
+export COMPOSER_HOME="${work}/composer-home"
+export COMPOSER_CACHE_DIR="${work}/composer-cache"
+export COMPOSER_NO_INTERACTION=1
+mkdir -p "${COMPOSER_HOME}" "${COMPOSER_CACHE_DIR}"
+
+printf '%s\n' '{"name":"consumer/verify","require":{},"repositories":[{"type":"composer","url":"https://repo.packagist.org"},{"packagist.org":false}],"config":{"allow-plugins":false,"preferred-install":"dist"}}' > composer.json
+
+install_flags=(--no-progress --prefer-dist)
+if [ "${dry_run}" = "1" ] && [ "${VERIFY_PUBLISHED_PREFER_SOURCE:-0}" = "1" ]; then
+    # Test knob (dry run only): forces a source install to prove the check fails.
+    install_flags=(--no-progress --prefer-source)
+fi
 
 # Packagist can lag behind a fresh tag; retry the install for a few minutes.
 installed=0
 for attempt in $(seq 1 18); do
-    if composer require --no-interaction --no-progress --prefer-dist ${platform_args[@]+"${platform_args[@]}"} "${package}:${version}" >install.log 2>&1; then
+    if composer require "${install_flags[@]}" ${platform_args[@]+"${platform_args[@]}"} "${package}:${version}" >install.log 2>&1; then
         installed=1
         break
     fi
@@ -60,13 +82,22 @@ locked="$(php -r '
 $lock = json_decode((string)file_get_contents("composer.lock"), true, 512, JSON_THROW_ON_ERROR);
 foreach ($lock["packages"] as $p) {
     if ($p["name"] === $argv[1]) {
-        echo $p["version"], "|", $p["dist"]["type"] ?? "", "|", $p["dist"]["reference"] ?? "", "|", $p["source"]["reference"] ?? "";
+        echo $p["version"], "|", $p["dist"]["type"] ?? "", "|", $p["dist"]["reference"] ?? "", "|", $p["source"]["reference"] ?? "", "|", $p["dist"]["url"] ?? "";
     }
 }' "${package}")"
-IFS='|' read -r got_version dist_type dist_ref source_ref <<<"${locked}"
+IFS='|' read -r got_version dist_type dist_ref source_ref dist_url <<<"${locked}"
+
+install_source="$(php -r '
+$installed = json_decode((string)file_get_contents("vendor/composer/installed.json"), true, 512, JSON_THROW_ON_ERROR);
+foreach ($installed["packages"] as $p) {
+    if ($p["name"] === $argv[1]) {
+        echo $p["installation-source"] ?? "unknown";
+    }
+}' "${package}")"
 
 check "installed version is ${version}" "$([ "${got_version}" = "${version}" ] && echo 1 || echo 0)"
-check "installed from a dist archive (type ${dist_type:-none})" "$([ "${dist_type}" = "zip" ] && echo 1 || echo 0)"
+check "the lock records a zip dist (type ${dist_type:-none})" "$([ "${dist_type}" = "zip" ] && echo 1 || echo 0)"
+check "Composer installed it from dist (installation-source ${install_source:-unknown})" "$([ "${install_source}" = "dist" ] && echo 1 || echo 0)"
 check "dist reference is ${expected}" "$([ "${dist_ref}" = "${expected}" ] && echo 1 || echo 0)"
 check "source reference is ${expected}" "$([ "${source_ref}" = "${expected}" ] && echo 1 || echo 0)"
 
@@ -100,9 +131,13 @@ echo "== Published Artifact Verification record"
 echo "Package:     ${package}"
 echo "Version:     ${got_version:-unknown}"
 echo "Expected:    ${expected}"
+echo "Dist URL:    ${dist_url:-none}"
 echo "Dist ref:    ${dist_ref:-none}"
 echo "Source ref:  ${source_ref:-none}"
 echo "PHP:         $(php -r 'echo PHP_VERSION;')"
+echo "Composer:    $(composer --version 2>/dev/null | head -n 1)"
+echo "Install src: ${install_source:-unknown} (preferred-install $(composer config preferred-install 2>/dev/null || echo unknown))"
+echo "Isolation:   COMPOSER_HOME and cache are temporary; no inherited COMPOSER_* variables; packagist.org is the only repository"
 [ "${dry_run}" = "1" ] && echo "Mode:        DRY RUN (not a qualification)" || echo "Mode:        qualification (no platform override)"
 echo "Installed files:"
 sed 's/^/  /' <<<"${files}"
