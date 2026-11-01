@@ -124,24 +124,46 @@ abstract class TurnstileRequestCall
 
     private function logSuccess(array|stdClass $result): void
     {
-        $this->log('success', success: $result);
+        $this->log('success', 'info', success: $result);
     }
 
     private function logError(string $message): void
     {
-        $this->log('failed', error_details: $message);
+        $this->log('failed', 'error', error_details: $message);
     }
 
-    private function log(string $file_name, string $error_details = '', array|stdClass $success = []): void
+    private function log(string $file_name, string $level, string $error_details = '', array|stdClass $success = []): void
     {
         if(!empty($error_details)){
             $log['error'] = $error_details;
         }
         if(!empty($success)){
-            $log['response'] = (array)$success;
+            $log['response'] = array_intersect_key((array)$success, array_flip(['success', 'error-codes', 'hostname', 'action', 'challenge_ts']));
         }
-        $log['params'] = $this->params;
+        // Parameter values (secret, token, remote IP) are never logged; names only.
+        $log['param_names'] = array_keys($this->params);
         $log['url'] = $this->url;
-        Logger::RecordLog($log, 'CloudflareTurnstile/turnstile_' . $file_name . '_' . (intval(microtime(true) * 1000)));
+        $arguments = [
+            'logFile' => 'CloudflareTurnstile/turnstile_' . $file_name . '_' . (intval(microtime(true) * 1000)),
+        ];
+        if ($this->loggerAcceptsLevel()) {
+            $arguments['level'] = $level;
+        }
+        // Named arguments keep this call valid for every maatify/logger 5.x signature.
+        call_user_func_array([Logger::class, 'RecordLog'], ['message' => $log] + $arguments);
+    }
+
+    /**
+     * maatify/logger 5.0.x has RecordLog($message, $logFile, $extension); 5.1+ has
+     * RecordLog($message, $level, $logFile). Pass `level` only where it exists.
+     */
+    private function loggerAcceptsLevel(): bool
+    {
+        foreach ((new \ReflectionMethod(Logger::class, 'RecordLog'))->getParameters() as $parameter) {
+            if ($parameter->getName() === 'level') {
+                return true;
+            }
+        }
+        return false;
     }
 }
