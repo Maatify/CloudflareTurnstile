@@ -5,3 +5,4 @@ parameters:
         - tests
         - scripts
         - harness
+        - examples
