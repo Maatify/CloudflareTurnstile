@@ -8,12 +8,25 @@
 # This verifies the candidate artifact before publication. After publication the
 # real Composer dist must be verified separately.
 #
+# The qualification run is strict: it requires a supported PHP patch (the
+# security floors of scripts/ci/check-php-floor.php) and refuses any Composer
+# platform override (HARNESS_COMPOSER_ARGS). RELEASE_VERIFY_DRY_RUN=1 skips both
+# for a local rehearsal; its record is labelled DRY RUN and never reports PASS.
+#
 # Usage: scripts/release/verify-artifact.sh <ref>
-# Optional local-only knob: HARNESS_COMPOSER_ARGS (never set in CI).
 set -euo pipefail
 
 ref="${1:?Usage: scripts/release/verify-artifact.sh <ref>}"
 root="$(cd "$(dirname "$0")/../.." && pwd)"
+dry_run="${RELEASE_VERIFY_DRY_RUN:-0}"
+
+if [ "${dry_run}" != "1" ]; then
+    if [ -n "${HARNESS_COMPOSER_ARGS:-}" ]; then
+        echo "Refusing to qualify a release with HARNESS_COMPOSER_ARGS set (platform overrides are not allowed)." >&2
+        exit 2
+    fi
+    php "${root}/scripts/ci/check-php-floor.php"
+fi
 
 commit="$(git -C "${root}" rev-parse --verify "${ref}^{commit}")"
 tree="$(git -C "${root}" rev-parse "${commit}^{tree}")"
@@ -51,10 +64,17 @@ echo "Target:  ${target}"
 echo "Commit:  ${commit}"
 echo "Tree:    ${tree}"
 echo "PHP:     $(php -r 'echo PHP_VERSION;')"
+[ "${dry_run}" = "1" ] && echo "Mode:    DRY RUN (not a qualification)" || echo "Mode:    qualification"
 failed=0
 for line in "${results[@]}"; do
     echo "${line}"
     [[ "${line}" == FAIL* ]] && failed=1
 done
-[ "${failed}" -eq 0 ] && echo "Result:  PASS" || echo "Result:  FAIL"
+if [ "${failed}" -ne 0 ]; then
+    echo "Result:  FAIL"
+elif [ "${dry_run}" = "1" ]; then
+    echo "Result:  DRY RUN COMPLETE (no qualification)"
+else
+    echo "Result:  PASS"
+fi
 exit "${failed}"
