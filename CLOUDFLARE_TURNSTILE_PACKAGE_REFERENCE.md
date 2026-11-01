@@ -4,6 +4,8 @@ Canonical reference for the stable public, runtime and behavioral contract of `m
 
 Composer identity, metadata, requirements, dependencies, autoloading and scripts are owned by [`composer.json`](composer.json) and are not restated here. Changes between releases are recorded in [CHANGELOG.md](CHANGELOG.md).
 
+Usage walkthroughs are in the [Usage Guide](docs/guides/USAGE_GUIDE.md); runnable code is in [`examples/`](examples/).
+
 ## Purpose and boundaries
 
 The library validates a Cloudflare Turnstile token on the server. It builds the `siteverify` request, sends it, maps the response and errors, logs the outcome, and fails closed: a request that cannot be sent, answered or read is reported as an unsuccessful validation, never as a success.

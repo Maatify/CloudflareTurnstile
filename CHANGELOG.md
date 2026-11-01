@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `TurnstileRequestCall::endpoint()`, a protected method that returns the verification URL (Cloudflare `siteverify` by default). A subclass may override it to target a different endpoint, for example a local test double. It only changes the URL; request construction and response mapping are unchanged.
+- `docs/guides/USAGE_GUIDE.md`, a consumer guide with a capability map, walkthroughs and links to the examples.
 - Consumer examples in `examples/` (one Host-dependent form example and two standalone examples that run against a local stand-in), smoke-executed by CI.
 - Support metadata in `composer.json` (`support.issues`, `support.source`, `support.security`), `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
 
