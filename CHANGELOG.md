@@ -14,7 +14,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Upgrading from 5.x
 
 1. Run the application on PHP 8.4.27 or newer in 8.4, or 8.5.12 or newer in 8.5.
-2. Update the dependencies with `composer update maatify/cloudflare-turnstile --with-all-dependencies` so `maatify/logger` and `maatify/json` move to the supported ranges. A version of `maatify/logger` older than `5.1`, or a pinned `maatify/json` older than `5.0.4`, must be updated.
+2. Change the version constraint of the library in your project to `^6.0`, and update it together with its dependencies. Once `6.0.0` is published, this does both:
+
+   ```bash
+   composer require 'maatify/cloudflare-turnstile:^6.0' --with-all-dependencies
+   ```
+
+   A constraint such as `^5.0` in your `composer.json` keeps Composer on 5.x, so `composer update` alone does not upgrade. Make sure `maatify/logger` ends up on `5.1` or newer and `maatify/json` on `5.0.4` or newer; if your project pins them lower, raise those constraints too.
 3. No change to the public classes or method signatures is required.
 
 ### Added
