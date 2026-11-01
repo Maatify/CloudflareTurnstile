@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `TurnstileRequestCall::endpoint()`, a protected method that returns the verification URL (Cloudflare `siteverify` by default). A subclass may override it to target a different endpoint, for example a local test double. It only changes the URL; request construction and response mapping are unchanged.
+- `.gitattributes` keeps development and CI files out of the Composer dist archive; CI inspects the resulting archive.
 - `llms.txt`, a navigation file for AI consumers that points to the Package Reference, Usage Guide, README and examples.
 - `docs/guides/USAGE_GUIDE.md`, a consumer guide with a capability map, walkthroughs and links to the examples.
 - Consumer examples in `examples/` (one Host-dependent form example and two standalone examples that run against a local stand-in), smoke-executed by CI.
