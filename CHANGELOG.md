@@ -62,8 +62,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The call to `curl_close()`, which has had no effect since PHP 8.0 and is deprecated in PHP 8.5.
 
+## [5.0.2] - 2026-11-01
+
+Security maintenance release for the `5.x` line.
+
+### Fixed
+
+- Log entries no longer contain request parameter values: only the parameter names and an allow-listed subset of the response are logged.
+- `Logger::RecordLog()` is now called with named arguments, so the call is valid for every `maatify/logger` `^5` release; with `maatify/logger` 5.1 and newer the PSR-3 level is passed as well.
+
+### Changed
+
+- The `version` field was removed from `composer.json`: versions come from Git tags.
+
 ## [5.0.1] - 2025-08-10
 
 Published release. Changes made before `6.0.0` are not itemized in this changelog; see the Git history and the [GitHub release](https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.1).
 
+[5.0.2]: https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.2
 [5.0.1]: https://github.com/Maatify/CloudflareTurnstile/releases/tag/5.0.1
