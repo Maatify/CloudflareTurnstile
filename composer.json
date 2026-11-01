@@ -1,6 +1,5 @@
 {  "name": "maatify/cloudflare-turnstile",
   "description": "Unofficial Turnstile for PHP it's library for maatify.dev Turnstile cloudflare Captcha handler, known by our team",
-  "version": "5.0.1",
   "type": "library",
   "keywords": [
     "PHP",
@@ -45,7 +44,8 @@
   ],
   "require": {
     "ext-curl": "*",
-    "maatify/logger": "^5",
+    "maatify/logger": "^5.1",
+    "psr/log": "^3",
     "maatify/functions": "^5",
     "maatify/json": "^5"
   },

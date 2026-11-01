@@ -22,6 +22,7 @@ namespace Maatify\Turnstile;
 use CurlHandle;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
+use Psr\Log\LogLevel;
 use stdClass;
 
 abstract class TurnstileRequestCall
@@ -124,24 +125,29 @@ abstract class TurnstileRequestCall
 
     private function logSuccess(array|stdClass $result): void
     {
-        $this->log('success', success: $result);
+        $this->log('success', LogLevel::INFO, success: $result);
     }
 
     private function logError(string $message): void
     {
-        $this->log('failed', error_details: $message);
+        $this->log('failed', LogLevel::ERROR, error_details: $message);
     }
 
-    private function log(string $file_name, string $error_details = '', array|stdClass $success = []): void
+    private function log(string $file_name, string $level, string $error_details = '', array|stdClass $success = []): void
     {
         if(!empty($error_details)){
             $log['error'] = $error_details;
         }
         if(!empty($success)){
-            $log['response'] = (array)$success;
+            $log['response'] = array_intersect_key((array)$success, array_flip(['success', 'error-codes', 'hostname', 'action', 'challenge_ts']));
         }
-        $log['params'] = $this->params;
+        // Parameter values (secret, token, remote IP) are never logged; names only.
+        $log['param_names'] = array_keys($this->params);
         $log['url'] = $this->url;
-        Logger::RecordLog($log, 'CloudflareTurnstile/turnstile_' . $file_name . '_' . (intval(microtime(true) * 1000)));
+        Logger::RecordLog(
+            $log,
+            level: $level,
+            logFile: 'CloudflareTurnstile/turnstile_' . $file_name . '_' . (intval(microtime(true) * 1000))
+        );
     }
 }
