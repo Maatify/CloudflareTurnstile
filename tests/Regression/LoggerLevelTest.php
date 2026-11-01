@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests\Regression;
+namespace Maatify\CloudflareTurnstile\Tests\Regression;
 
 use PHPUnit\Framework\TestCase;
 

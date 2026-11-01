@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Maatify\Turnstile\TurnstileValidation;
+use Maatify\CloudflareTurnstile\Service\TurnstileValidation;
 
 /**
  * Realistic consumer workflow through the production autoload and the public
@@ -61,7 +61,7 @@ $psr4Map = (string)file_get_contents($vendorRoot . '/composer/autoload_psr4.php'
 echo json_encode([
     'loaded_from_vendor' => str_starts_with((string)realpath($packageFile), $vendorRoot . DIRECTORY_SEPARATOR),
     // The consumer must not see the package's autoload-dev or test namespace.
-    'test_autoload_absent' => !class_exists('Maatify\\Turnstile\\Tests\\Support\\TestCall')
-        && !str_contains($psr4Map, 'Turnstile\\\\Tests'),
+    'test_autoload_absent' => !class_exists('Maatify\\CloudflareTurnstile\\Tests\\Support\\TestCall')
+        && !str_contains($psr4Map, 'CloudflareTurnstile\\\\Tests'),
     'results' => $results,
 ], JSON_THROW_ON_ERROR), "\n";

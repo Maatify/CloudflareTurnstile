@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests\Regression;
+namespace Maatify\CloudflareTurnstile\Tests\Regression;
 
-use Maatify\Turnstile\TurnstileRequestCall;
-use Maatify\Turnstile\TurnstileValidation;
+use Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall;
+use Maatify\CloudflareTurnstile\Service\TurnstileValidation;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * The public class names are the integration surface of the 5.x releases and
- * must keep resolving under the Maatify\Turnstile namespace, while the files
- * live under src/{Responsibility}/.
+ * The public classes live under the canonical Maatify\CloudflareTurnstile
+ * namespace (Maatify\{PackageName}\ + the responsibility directory); the
+ * 5.x namespace Maatify\Turnstile is intentionally gone in 6.0.0.
  */
 final class ClassLocationTest extends TestCase
 {
-    public function testPublicClassesKeepTheirNamesAndLiveUnderSrc(): void
+    public function testPublicClassesResolveUnderTheCanonicalNamespace(): void
     {
         $expected = [
             TurnstileRequestCall::class => 'src/Adapter/TurnstileRequestCall.php',
@@ -27,8 +27,14 @@ final class ClassLocationTest extends TestCase
             $file = (string)(new ReflectionClass($class))->getFileName();
             $this->assertSame(realpath(__DIR__ . '/../../' . $relative), realpath($file), $class);
         }
-        $this->assertSame('Maatify\Turnstile\TurnstileRequestCall', TurnstileRequestCall::class);
-        $this->assertSame('Maatify\Turnstile\TurnstileValidation', TurnstileValidation::class);
+        $this->assertSame('Maatify\CloudflareTurnstile\Adapter\TurnstileRequestCall', TurnstileRequestCall::class);
+        $this->assertSame('Maatify\CloudflareTurnstile\Service\TurnstileValidation', TurnstileValidation::class);
+    }
+
+    public function testLegacyNamespaceIsGone(): void
+    {
+        $this->assertFalse(class_exists('Maatify\\Turnstile\\TurnstileValidation'));
+        $this->assertFalse(class_exists('Maatify\\Turnstile\\TurnstileRequestCall'));
     }
 
     public function testLegacyDirectoryIsGone(): void

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests\Support;
+namespace Maatify\CloudflareTurnstile\Tests\Support;
 
 /**
  * Starts the deterministic local provider stand-in (tests/Support/router.php)

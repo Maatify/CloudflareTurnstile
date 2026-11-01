@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Maatify\Turnstile\Tests\Regression;
+namespace Maatify\CloudflareTurnstile\Tests\Regression;
 
-use Maatify\Turnstile\Tests\Support\TestCall;
-use Maatify\Turnstile\Tests\Support\UsesLocalProvider;
+use Maatify\CloudflareTurnstile\Tests\Support\TestCall;
+use Maatify\CloudflareTurnstile\Tests\Support\UsesLocalProvider;
 use PHPUnit\Framework\TestCase;
 
 /**

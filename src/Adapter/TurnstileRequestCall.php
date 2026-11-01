@@ -17,7 +17,7 @@
  *
  */
 
-namespace Maatify\Turnstile;
+namespace Maatify\CloudflareTurnstile\Adapter;
 
 use CurlHandle;
 use Maatify\Functions\GeneralFunctions;

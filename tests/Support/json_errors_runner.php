@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Maatify\Turnstile\Tests\Support\TestValidation;
+use Maatify\CloudflareTurnstile\Tests\Support\TestValidation;
 
 /**
  * Runs TurnstileValidation::jsonErrors() in its own process (it terminates the

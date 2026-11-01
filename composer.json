@@ -25,15 +25,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Maatify\\Turnstile\\": [
-        "src/Adapter/",
-        "src/Service/"
-      ]
+      "Maatify\\CloudflareTurnstile\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Maatify\\Turnstile\\Tests\\": "tests/"
+      "Maatify\\CloudflareTurnstile\\Tests\\": "tests/"
     }
   },
   "require": {
