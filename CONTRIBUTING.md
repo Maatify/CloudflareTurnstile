@@ -44,7 +44,7 @@ composer test:system
 
 CI runs two required jobs, and the `CI gate` check aggregates both: the `Verify` matrix and `Workflow lint`.
 
-`scripts/ci/verify.sh` runs everything the `Verify` matrix runs, in latest or lowest dependency mode: Composer validation and resolution, platform requirements, the strict PSR-4 autoload check, the PHP patch floor and `require.php` boundary checks, syntax, whitespace, PHPStan, the regression and system suites, the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API), smoke execution of the standalone examples, an inspection of the distribution archive, and `composer audit`:
+`scripts/ci/verify.sh` runs everything the `Verify` matrix runs, in latest or lowest dependency mode: Composer validation and resolution, platform requirements, the strict PSR-4 autoload check, the PHP patch floor and `require.php` boundary checks, syntax, whitespace, PHPStan, the regression and system suites, the Consumer Verification Harness (a clean Composer consumer that installs the package from the committed tree and exercises its public API), smoke execution of the standalone examples, an inspection of the distribution archive (required files, excluded files and document links), and `composer audit`:
 
 ```bash
 scripts/ci/verify.sh latest
@@ -52,6 +52,8 @@ scripts/ci/verify.sh lowest
 ```
 
 The harness can also be run on its own with `harness/run.sh latest` (or `lowest`).
+
+Before a release, `scripts/release/verify-artifact.sh <ref>` verifies the candidate artifact of an exact commit (archive content and links, `composer validate --strict`, the harness in both modes) and prints a record of the target, commit, tree and results. It does not replace verifying the real Composer `dist` after publication.
 
 `Workflow lint` is not part of `verify.sh`. Run it locally with the same pinned `actionlint` version as CI (`1.7.12`; `ACTIONLINT_VERSION` in `.github/workflows/ci.yml` is the source of truth, and the release archive is verified against the `ACTIONLINT_SHA256` there):
 

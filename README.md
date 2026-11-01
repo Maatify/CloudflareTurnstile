@@ -12,7 +12,7 @@
 [![Published at qualification](https://img.shields.io/badge/Published%20at%20qualification-5.0.2-lightgrey)](https://packagist.org/packages/maatify/cloudflare-turnstile)
 [![PHP](https://img.shields.io/badge/PHP-8.4.27%2B%20%7C%208.5.12%2B%20(%3C8.6)-8892BF)](composer.json)
 [![License](https://img.shields.io/badge/License-Proprietary-green)](LICENSE)
-[![PHPStan](https://img.shields.io/badge/PHPStan-Level%20Max-brightgreen)](phpstan.neon)
+[![PHPStan](https://img.shields.io/badge/PHPStan-Level%20Max-brightgreen)](#quality-status)
 [![Maatify Ecosystem](https://img.shields.io/badge/Maatify-Ecosystem-blueviolet)](https://github.com/Maatify)
 
 [![Packagist](https://img.shields.io/badge/Packagist-maatify%2Fcloudflare--turnstile-blue)](https://packagist.org/packages/maatify/cloudflare-turnstile)
