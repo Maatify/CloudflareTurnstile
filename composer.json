@@ -44,14 +44,25 @@
   ],
   "require": {
     "ext-curl": "*",
-    "maatify/logger": "^5.1",
-    "psr/log": "^3",
+    "maatify/logger": "^5",
     "maatify/functions": "^5",
     "maatify/json": "^5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11 || ^12"
   },
   "autoload": {
     "psr-4": {
       "Maatify\\Turnstile\\": "turnstile/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Maatify\\Turnstile\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test:logger-matrix": "bash scripts/verify-logger-matrix.sh"
   }
 }
