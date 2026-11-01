@@ -99,9 +99,9 @@ final class LoggerLevelTest extends TestCase
     /** @return list<string> */
     private static function sourceFiles(): array
     {
-        $files = glob(__DIR__ . '/../../turnstile/*.php');
+        $files = glob(__DIR__ . '/../../src/*/*.php');
         if ($files === false) {
-            self::fail('Unable to list turnstile/*.php');
+            self::fail('Unable to list src/*/*.php');
         }
         return $files;
     }

@@ -24,7 +24,7 @@ composer check-platform-reqs
 
 php scripts/ci/check-php-constraint.php
 
-find turnstile tests scripts harness -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
+find src tests scripts harness -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
 
 scripts/ci/check-whitespace.sh
 

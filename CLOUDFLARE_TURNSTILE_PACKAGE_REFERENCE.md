@@ -23,7 +23,7 @@ Source Topology: Single Capability
 
 Capability: server-side Turnstile token validation.
 
-The sources currently live in `turnstile/` under the namespace `Maatify\Turnstile`. The canonical layout is `src/{Responsibility}/`. Two different deviations are involved, and they are treated differently.
+The sources live under `src/{Responsibility}/` (the Single Capability layout): `src/Adapter/TurnstileRequestCall.php` (the provider adaptation) and `src/Service/TurnstileValidation.php` (the validation orchestration). Both declare the namespace `Maatify\Turnstile`, which `composer.json` maps to the two directories through one PSR-4 entry. The namespace is the only deviation from the canonical layout and is covered by the exception below.
 
 ### Namespace and class names: Owner-approved exception (release line `6.0.0`)
 
@@ -38,9 +38,9 @@ The sources currently live in `turnstile/` under the namespace `Maatify\Turnstil
 | Owner approval | Granted by the Owner on 2026-11-01 for the `6.0.0` line. |
 | Migration or review trigger | The next Owner-approved release boundary after `6.0.0` that permits a breaking change. The exception is recorded in `docs/php-engineering-standards/STANDARDS_MANIFEST.md` when the standards adoption artifacts are added. |
 
-### File location: not excepted
+### File location: standard layout
 
-Moving the PHP files from `turnstile/` to `src/` and updating the PSR-4 mapping in `composer.json` does not change any fully-qualified class name, so it is a non-breaking remediation. It is not covered by the exception above and is tracked as a separate structural task to complete before the `6.0.0` release is qualified. The exact placement under `src/{Responsibility}/` that preserves the public class names is decided in that task. Until then, the current location is a known deviation of the source tree, not an approved one.
+The PHP files were moved from `turnstile/` to `src/Adapter/` and `src/Service/`, and the PSR-4 mapping in `composer.json` was updated. No fully-qualified class name changed, so consumers are not affected. The exception above does not cover file location, and none is needed.
 
 ## Consumer workflow
 
