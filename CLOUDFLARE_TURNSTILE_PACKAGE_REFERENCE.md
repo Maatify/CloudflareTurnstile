@@ -27,7 +27,7 @@ Capability: server-side Turnstile token validation. The sources currently live i
 
 | Field | Value |
 |---|---|
-| Standard | `std-package-building`, source topology and namespace rules (Deferred Structural Obligation) |
+| Standard | `std-package-building` §5 (Directory Structure Inside `src/`, Deferred Structural Obligation) and the namespace rules |
 | Affected paths and namespaces | `turnstile/` and `Maatify\Turnstile\` (classes `TurnstileRequestCall` and `TurnstileValidation`) |
 | Release line | `6.0.0` |
 | Deviation allowed | Keep `turnstile/` instead of `src/`, and keep the namespace `Maatify\Turnstile` and the two class names, instead of migrating to the canonical layout |
