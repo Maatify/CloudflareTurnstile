@@ -21,20 +21,26 @@ Non-goals:
 Source Topology: Single Capability
 ```
 
-Capability: server-side Turnstile token validation. The sources currently live in `turnstile/` under the namespace `Maatify\Turnstile`, which is not the canonical `src/` layout and namespace. This is an Owner-approved exception for the `6.0.0` release line, recorded in the exception section below.
+Capability: server-side Turnstile token validation.
 
-### Owner-approved exception (release line `6.0.0`)
+The sources currently live in `turnstile/` under the namespace `Maatify\Turnstile`. The canonical layout is `src/{Responsibility}/`. Two different deviations are involved, and they are treated differently.
+
+### Namespace and class names: Owner-approved exception (release line `6.0.0`)
 
 | Field | Value |
 |---|---|
 | Standard | `std-package-building` §5 (Directory Structure Inside `src/`, Deferred Structural Obligation) and the namespace rules |
-| Affected paths and namespaces | `turnstile/` and `Maatify\Turnstile\` (classes `TurnstileRequestCall` and `TurnstileValidation`) |
+| Affected namespace and names | `Maatify\Turnstile\` and the classes `TurnstileRequestCall` and `TurnstileValidation` |
 | Release line | `6.0.0` |
-| Deviation allowed | Keep `turnstile/` instead of `src/`, and keep the namespace `Maatify\Turnstile` and the two class names, instead of migrating to the canonical layout |
-| Evidence and reason | These fully-qualified class names are the integration surface of the published `5.x` releases; moving them changes every consuming application. The rationale is to be confirmed by the Owner. |
-| Scope boundary | Only the two existing classes and their namespace. New independent capabilities must use the canonical topology. |
+| Deviation allowed | Keep the public namespace `Maatify\Turnstile` and the two class names instead of moving to the canonical namespace |
+| Evidence and reason | The fully-qualified class names are the documented integration surface of the published `5.x` releases: the `5.0.1` README instructs consumers to `use Maatify\Turnstile\TurnstileValidation;`. Renaming them breaks every consuming application. |
+| Scope boundary | Only the public namespace and the two existing class names. It does not cover file location, and new independent capabilities must use the canonical topology. |
 | Owner approval | Granted by the Owner on 2026-11-01 for the `6.0.0` line. |
 | Migration or review trigger | The next Owner-approved release boundary after `6.0.0` that permits a breaking change. The exception is recorded in `docs/php-engineering-standards/STANDARDS_MANIFEST.md` when the standards adoption artifacts are added. |
+
+### File location: not excepted
+
+Moving the PHP files from `turnstile/` to `src/` and updating the PSR-4 mapping in `composer.json` does not change any fully-qualified class name, so it is a non-breaking remediation. It is not covered by the exception above and is tracked as a separate structural task to complete before the `6.0.0` release is qualified. The exact placement under `src/{Responsibility}/` that preserves the public class names is decided in that task. Until then, the current location is a known deviation of the source tree, not an approved one.
 
 ## Consumer workflow
 
@@ -97,7 +103,12 @@ Result of both calls: the decoded response when it is a JSON object; otherwise a
 
 ## Logging
 
-Every call to Cloudflare writes one entry through `maatify/logger`: level `info` with the response on success and level `error` with the error message on failure, under the log file `CloudflareTurnstile/turnstile_<success|failed>_<milliseconds>`. The entry also contains the request parameters and the endpoint URL.
+Every call that reaches Cloudflare or fails while preparing the request writes one entry through `maatify/logger`, under the log file `CloudflareTurnstile/turnstile_<success|failed>_<milliseconds>`:
+
+- Level `info`, log file `turnstile_success_…`: a response that decodes to a JSON object was received. This is logged whatever the value of its `success` field, so a validation rejected by Cloudflare (`success: false`) is also logged at `info`; use the returned result, not the log level, to learn the outcome.
+- Level `error`, log file `turnstile_failed_…`: a transport (cURL) error, an empty or non-object response (the message names the HTTP status when it is not 200), or request parameters that cannot be JSON-encoded.
+
+The entry also contains the request parameters and the endpoint URL.
 
 ## Extension point
 
