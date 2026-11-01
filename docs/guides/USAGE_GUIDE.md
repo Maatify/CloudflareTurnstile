@@ -10,14 +10,17 @@ It sends the token and your secret key to the Cloudflare `siteverify` endpoint, 
 
 ## Requirements
 
-- PHP and dependency constraints are declared in [`composer.json`](../../composer.json): PHP `>=8.4.27 <8.5.0 || >=8.5.12 <8.6.0`, the `curl` extension, and the Maatify packages it lists. Install it with Composer:
-
-  ```bash
-  composer require maatify/cloudflare-turnstile
-  ```
-
+- PHP and dependency constraints are declared in [`composer.json`](../../composer.json): PHP `>=8.4.27 <8.5.0 || >=8.5.12 <8.6.0`, the `curl` extension, and the Maatify packages it lists.
 - A Turnstile site key (used by the widget in your page) and the matching **secret key** (used only on your server).
 - Network access from your server to `challenges.cloudflare.com`.
+
+### Release status and installation
+
+This guide describes release `6.0.0`, which is **not published yet**. The published `5.x` line uses the previous namespace, so the code in this guide does not work with it. Once `6.0.0` is published, install it with:
+
+```bash
+composer require 'maatify/cloudflare-turnstile:^6.0' --with-all-dependencies
+```
 
 Upgrading from `5.x`: the namespace changed. See [CHANGELOG.md](../../CHANGELOG.md).
 
@@ -102,7 +105,7 @@ Complete, runnable example (it needs a stand-in URL as its argument): [`examples
 
 ## Logging and secrets
 
-Each call writes one entry through `maatify/logger`. The entry contains the endpoint URL and the request parameter names, never the secret key, the token or other parameter values. Details are in the [Package Reference](../../CLOUDFLARE_TURNSTILE_PACKAGE_REFERENCE.md#logging).
+Each request that is sent to Cloudflare, or that fails while being prepared, writes one entry through `maatify/logger`; a later call that reuses a result already held by the instance sends nothing and writes no new entry. The entry contains the endpoint URL and the request parameter names, never the secret key, the token or other parameter values. Details are in the [Package Reference](../../CLOUDFLARE_TURNSTILE_PACKAGE_REFERENCE.md#logging).
 
 ## Where to go next
 
